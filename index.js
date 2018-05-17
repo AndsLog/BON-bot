@@ -4,14 +4,12 @@ console.log('App start');
 
 const line = require('@line/bot-sdk');
 const express = require('express');
-const request = require('request');
-const cheerio = require('cheerio');
 
 // create LINE SDK config from env variables
 // for andy not
 const config = {
-  channelAccessToken: 'YBj7tCC0v+3hSQS1OPOI3WGgpuiWwOqA+vs6AlZPgc7kksKaZnXXKMSDovk492L64WbEBSRPcq7Yr9WZ8EKS0un7/AJPpCP92Rr4Y+H+DxUnF/ZVzS20I+iNEBCe1oGEblvmazUj0D5157DnSQhAagdB04t89/1O/w1cDnyilFU=',
-  channelSecret: 'cb52a3777c92132d08710579a22a5424'
+  channelAccessToken: 'YAj/SoBOpYZeCcAmeoL/u2SvF2XisBMeoJ7N5E0eJBfpZi33APwOByLAkkH+rZhynctYFAlvFDGepzL/cGT/TsHscIMJgbIFv8Qr6zWLJ4QI6NEKmmbtQjNQYj3WY0L/9xoTLlI6tFZTsK3WL/aEkAdB04t89/1O/w1cDnyilFU=',
+  channelSecret: '6fa387c02b291fd45788644dc71a55c3'
 };
 
 // for rel bot 5
@@ -19,9 +17,6 @@ const config = {
 //   channelAccessToken: 'CHSFSSkScq10baLGKQO0AWVoZ6hTTA3x8xSbAiwF1TY4rNBDZqiPFXsgpgN9mycyQUBVcouOMaSOY83jZs0HiQaRZCUZgnn98r15EVDg40U/FFPGGyyRp/zHlSD3rZYZkCZRW7uEQHEufpW2YRG0+wdB04t89/1O/w1cDnyilFU=',
 //   channelSecret: '21b2b8ce572c642f88c051edd182999b'
 // };
-
-const lawGovUrl = 'https://lis.ly.gov.tw/lglawc/lglawkm';
-const countryLawUrl = 'https://law.moj.gov.tw//Schedule/cll.html';
 
 const verifyUserId = 'Udeadbeefdeadbeefdeadbeefdeadbeef';
 
@@ -43,6 +38,10 @@ app.listen(port, () => {
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/callback', line.middleware(config), (req, res) => {
+  let replyText = {
+    type: 'text',
+    text: ''
+  }
   return Promise.all(req.body.events.map((event) => {
     let replyToken = event.replyToken;
     let eventType = undefined === event.type ? null : event.type;
@@ -51,52 +50,35 @@ app.post('/callback', line.middleware(config), (req, res) => {
 
     if (eventType === 'join' || eventType === 'follow') {
       let sourceId = event.source.userId || event.source.roomId || event.source.groupId;
-      let greetingString = '這是法律查詢 andy Bot，很高興為您服務';
-      let results = {
-        type: 'text',
-        text: greetingString
-      };
+      let greetingString = '您好，我是這次同學會的詢問機器人 bon-bot，有關同學會的細節都可以詢問我喔~ \n 輸入 help，查詢關鍵字 \n 輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
+      replyText.text = greetingString;
       return Promise.all([
         eventType,
-        client.pushMessage(sourceId, results)
+        client.pushMessage(sourceId, replyText)
       ]);
     }
 
     if ((eventType === 'message' || messageType === 'text') && userId !== verifyUserId) {
-      return new Promise((resolve, reject) => {
-        request(lawGovUrl, function (error, response, body) {
-          if (error || !body) {
-            return;
-          }
-
-          let $ = cheerio.load(body); // 載入 body
-          let lawsTableTrs = $('table.sumtab').find('tr');
-          let textString = '';
-          for (let i = 1; i < lawsTableTrs.length; i++) {
-            let lawsTds = lawsTableTrs.eq(i).find('td');
-            let date = lawsTds.eq(1).text();
-            let status = lawsTds.eq(2).text();
-            let content = lawsTds.eq(3).find('a').text();
-            let url = lawsTds.eq(3).find('a').attr('href');
-
-            textString += date.replace(/\r\n|\n/g, '') + '， ' +
-            status.replace(/\r\n|\n/g, '') + ': ' + content.replace(/\r\n|\n/g, '') + '\n' +
-            ' 網址: https://lis.ly.gov.tw' + encodeURI(url) + '\n' +
-            '-----------' + '\n';
-          }
-          let results = {
-            type: 'text',
-            text: textString
-          };
-          console.log(results);
-          resolve(results);
-        });
-      }).then((results) => {
-        return Promise.all([
-          eventType,
-          client.replyMessage(replyToken, results)
-        ]);
-      });
+      if (event.message === 'help') {
+        replyText.text = '輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
+        client.replyMessage(replyToken, replyText);
+        return eventType;
+      }
+      if (event.message === 'bon-bot') {
+        replyText.text = '您好 \n 輸入 help，查詢關鍵字 \n 輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
+        client.replyMessage(replyToken, replyText);
+        return eventType;
+      }
+      if (event.message === '點餐') {
+        replyText.text = 'Url';
+        client.replyMessage(replyToken, replyText);
+        return eventType;
+      }
+      if (event.message === '同學會') {
+        replyText.text = '時間：2018/06/16 17:30 \n 地點：西湖祕密花園';
+        client.replyMessage(replyToken, replyText);
+        return eventType;
+      }
     }
 
     return Promise.resolve(eventType);
