@@ -1,0 +1,22 @@
+{
+  "name": "bon-bot",
+  "version": "1.0.0",
+  "description": "a secretary line bot",
+  "main": "index.js",
+  "dependencies": {
+    "@line/bot-sdk": "^6.0.1",
+    "express": "^4.16.3",
+    "request": "^2.85.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "npm",
+    "node",
+    "package"
+  ],
+  "author": "andy lee",
+  "license": "ISC"
+}
