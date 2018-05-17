@@ -44,6 +44,7 @@ typings/
 
 # Optional eslint cache
 .eslintcache
+.eslintrc.js
 
 # Optional REPL history
 .node_repl_history
@@ -57,3 +58,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# vs code inspect json
+launch.json
