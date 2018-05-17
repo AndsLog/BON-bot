@@ -50,7 +50,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
 
     if (eventType === 'join' || eventType === 'follow') {
       let sourceId = event.source.userId || event.source.roomId || event.source.groupId;
-      let greetingString = '您好，我是這次同學會的詢問機器人 bon-bot，有關同學會的細節都可以詢問我喔~ \n 輸入 help，查詢關鍵字 \n 輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
+      let greetingString = '您好，我是這次同學會的詢問機器人 bon-bot，有關同學會的細節都可以詢問我喔~\n輸入 help，查詢關鍵字';
       replyText.text = greetingString;
       return Promise.all([
         eventType,
@@ -59,26 +59,32 @@ app.post('/callback', line.middleware(config), (req, res) => {
     }
 
     if ((eventType === 'message' || messageType === 'text') && userId !== verifyUserId) {
-      if (event.message.text === 'help') {
-        replyText.text = '輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
+      if (event.message.text === 'help' || event.message.text === 'Help') {
+        replyText.text = '輸入 同學會，了解同學會細節\n輸入 點餐，點當天餐點\n輸入 map，取得餐廳位置圖';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
       if (event.message.text === 'bon-bot') {
-        replyText.text = '您好 \n 輸入 help，查詢關鍵字 \n 輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
+        replyText.text = '您好\n輸入 help，查詢關鍵字\n輸入 同學會，了解同學會細節\n輸入 點餐，點當天餐點\n輸入 map，取得餐廳位置圖';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
       if (event.message.text === '點餐') {
-        replyText.text = 'Url';
+        replyText.text = 'https://goo.gl/forms/oW6wjAxHvdICnQ952';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
       if (event.message.text === '同學會') {
-        replyText.text = '時間：2018/06/16 17:30 \n 地點：西湖祕密花園';
+        replyText.text = '時間：2018/06/16 17:30\n地點：西湖祕密花園\n地址：苗栗縣西湖鄉金獅村茶亭九鄰六之一號';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
+      if (event.message.text === 'map' || event.message.text === 'Map') {
+        replyText.text = 'https://ppt.cc/flYqnx';
+        client.replyMessage(replyToken, replyText);
+        return eventType;
+      }
+      
     }
 
     return Promise.resolve(eventType);
