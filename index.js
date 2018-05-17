@@ -6,16 +6,16 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 
 // create LINE SDK config from env variables
-// for andy not
+// for bon-bot
 const config = {
   channelAccessToken: 'YAj/SoBOpYZeCcAmeoL/u2SvF2XisBMeoJ7N5E0eJBfpZi33APwOByLAkkH+rZhynctYFAlvFDGepzL/cGT/TsHscIMJgbIFv8Qr6zWLJ4QI6NEKmmbtQjNQYj3WY0L/9xoTLlI6tFZTsK3WL/aEkAdB04t89/1O/w1cDnyilFU=',
   channelSecret: '6fa387c02b291fd45788644dc71a55c3'
 };
 
-// for rel bot 5
+// for dev 3
 // const config = {
-//   channelAccessToken: 'CHSFSSkScq10baLGKQO0AWVoZ6hTTA3x8xSbAiwF1TY4rNBDZqiPFXsgpgN9mycyQUBVcouOMaSOY83jZs0HiQaRZCUZgnn98r15EVDg40U/FFPGGyyRp/zHlSD3rZYZkCZRW7uEQHEufpW2YRG0+wdB04t89/1O/w1cDnyilFU=',
-//   channelSecret: '21b2b8ce572c642f88c051edd182999b'
+//   channelAccessToken: '1Qwmhiid9XXUo6EO3I5NVM8MI6sWGuJkYp2pFL8tjXbGZY6AqM+gdoJdHAQ1JvX8lf8w2iIGhGmADq+e+o2hHL5e6lzAEjdjaeHFh6Ysgt9XUbflOE68OJglbsnU7BWmlhghTlJ29+zcV1+ufnQyOwdB04t89/1O/w1cDnyilFU=',
+//   channelSecret: '0feb95aa1a815fb49f55381c12eeea18'
 // };
 
 const verifyUserId = 'Udeadbeefdeadbeefdeadbeefdeadbeef';
@@ -59,22 +59,22 @@ app.post('/callback', line.middleware(config), (req, res) => {
     }
 
     if ((eventType === 'message' || messageType === 'text') && userId !== verifyUserId) {
-      if (event.message === 'help') {
+      if (event.message.text === 'help') {
         replyText.text = '輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
-      if (event.message === 'bon-bot') {
+      if (event.message.text === 'bon-bot') {
         replyText.text = '您好 \n 輸入 help，查詢關鍵字 \n 輸入 同學會，了解同學會細節 \n 輸入 點餐，點當天餐點';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
-      if (event.message === '點餐') {
+      if (event.message.text === '點餐') {
         replyText.text = 'Url';
         client.replyMessage(replyToken, replyText);
         return eventType;
       }
-      if (event.message === '同學會') {
+      if (event.message.text === '同學會') {
         replyText.text = '時間：2018/06/16 17:30 \n 地點：西湖祕密花園';
         client.replyMessage(replyToken, replyText);
         return eventType;
