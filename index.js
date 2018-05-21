@@ -6,17 +6,10 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 
 // create LINE SDK config from env variables
-// for bon-bot
 const config = {
-  channelAccessToken: 'YAj/SoBOpYZeCcAmeoL/u2SvF2XisBMeoJ7N5E0eJBfpZi33APwOByLAkkH+rZhynctYFAlvFDGepzL/cGT/TsHscIMJgbIFv8Qr6zWLJ4QI6NEKmmbtQjNQYj3WY0L/9xoTLlI6tFZTsK3WL/aEkAdB04t89/1O/w1cDnyilFU=',
-  channelSecret: '6fa387c02b291fd45788644dc71a55c3'
+  channelAccessToken: process.env.channelAccessToken,
+  channelSecret: process.env.channelSecret
 };
-
-// for dev 3
-// const config = {
-//   channelAccessToken: '1Qwmhiid9XXUo6EO3I5NVM8MI6sWGuJkYp2pFL8tjXbGZY6AqM+gdoJdHAQ1JvX8lf8w2iIGhGmADq+e+o2hHL5e6lzAEjdjaeHFh6Ysgt9XUbflOE68OJglbsnU7BWmlhghTlJ29+zcV1+ufnQyOwdB04t89/1O/w1cDnyilFU=',
-//   channelSecret: '0feb95aa1a815fb49f55381c12eeea18'
-// };
 
 const verifyUserId = 'Udeadbeefdeadbeefdeadbeefdeadbeef';
 
